@@ -1,0 +1,86 @@
+<html lang="en">
+<%- include("./partials/header.ejs") %>
+
+    <body>
+        <%- include("./partials/nav.ejs") %>
+
+            <div class="details" id="blog-detail">
+                <h2>
+                    <%= blog.title %>
+                </h2>
+                <div class="content">
+                    <p>
+                        <%= blog.body %>
+                    </p>
+                </div>
+                <!-- data attribute this is a special attribute inside
+                     which allows as to add our know custom attribute  -->
+                <!-- get the id of that blog and store it in that custom data attribute
+                     when ever we click the delete button we can grap the data using javascript 
+                    and using a fetch API we are gonna send a delete that document with that id -->
+                <a class="delete" data-doc="<%= blog._id %>">delete</a>
+                <!-- doc is using the data attribute -->
+            </div>
+
+            <%- include("./partials/footer.ejs") %>
+
+                <!-- vanilla javascript using script tag because it is gonna run in our browser/frontend not our browser   -->
+                <script>
+                    // query selector is used to get an element like getelementbyid by this we have the a tag
+                    //we have grabbed that element by its class delete. reference tag
+                    //stored in trashcan //we hence have a reference to that element
+                    //add a event listener so we can detect when the user clicks on the delete.a tag 
+                    const trashcan = document.querySelector('a.delete');
+                    //we are adding a click event and a fireback function in which we are gonna take the event 
+                    //object 
+                    trashcan.addEventListener('click', (e) => {
+                        //and inside we are gonna send a delete request
+                        //.1 where are we gonna send this request to 
+                        //we are gonna store that url in a endpoint const
+                        //`` we are storing that point where we are sending the delete request in a endpoint constant using template string which is backticks
+                        //blogs / id of that blog which is in the data.doc attribute concatenated by$
+                        //get that id by trashcan which is our reference to that element
+                        //.dataset which is anything that uses this(data-doc) data attribute
+                        const endpoint = `/blogs/${trashcan.dataset.doc}`;//doc is the name on the property using the data attribute
+                        //we need to send a delete request to that end point
+                        //we use fetch api
+                        //argument
+                        //1. the endpoint of url we are wanting to delete document of that block id from
+                        //2. options object for the fetch API specifying that the method is delete 
+                        //this ends out a request now from the js to this endpoint with the blog id init
+                        //and it says that this is a delete request hence when it gets to the server
+                        //and we can handle it as such 
+                        //sending a ejs request if we are doing it from javascript we are not doing that from a webform 
+                        // when we send this type of request in node we can not redirect ha sa response 
+                        //we have to send in text data or json 
+
+                        fetch(endpoint, {
+                            method: 'DELETE',
+                        })//this is asynchronous and we can attach it a promise and a error handling method 
+                            //we will receive that document that we want to delete 
+                            //we are gonna look at a redirect property and that redirect property is gonna be to the url we want to
+                            //direct to and this will be done from the front end
+                            //cause we cant deal with a ajax request from the server
+
+                            //when deletion is done the server will send back json response with the redirect and notifiction property
+                            .then(response => response.json())//then and a fire back function 
+                            //take the json data response and response.json this returns another response which passes this 
+                            // json data into an actual javascript object that we can use 
+                            // .then(data => window.location.href = data.redirect)
+                            //then we can tag another then promise to show the notifiction in the tag where the id is 
+                            //blog-detail of blog detail and redirect it back to the blog list page  after 1 sec
+                            .then(data => {
+                                document.getElementById("blog-detail").innerHTML = data.notification;
+
+                                setTimeout(() => {
+                                    //this is the redirect command
+                                    window.location.href = data.redirect;
+                                }, 1000);
+                            })
+                            .catch(err => console.log(err));
+                    });
+
+                </script>
+    </body>
+
+</html>

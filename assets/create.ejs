@@ -1,0 +1,34 @@
+<html lang="en">
+
+<%- include("./partials/header.ejs") %>
+
+
+    <body>
+        <!--click on the submit and fire a post request to the server
+        with all of this data included in the post request tehb onthe server we can handle that data
+         create a new instance of that blog document using the blog model
+        we created add that new data to the instance we created and then save that 
+        document to the database-->
+        <%- include("./partials/nav.ejs") %>
+            <div class="create-blog content">
+                <!-- actions attribute the value to where we want to send this request to
+                      /blogs is the url where we are passing the blogs model and finding all the blogs in the datbase 
+                    and displaying them in descending order 
+                2. attribute is the method to post request when we click on submit it is going to send this submit post request to 
+                    /blogs  -->
+                <form action="/blogs" method='POST'>
+                    <!-- send all of this data  and attach it to the body of the form
+                    use the name attribute  -->
+                    <label for="title">Blog title</label>
+                    <input type="text" id="title" name="title" required>
+                    <label for="snippet">Blog snippet</label>
+                    <input type="text" id="snippet" name="snippet" required>
+                    <label for="body">Blog body</label>
+                    <textarea id="body" name="body" required></textarea>
+                    <button>Submit</button>
+                </form>
+            </div>
+    </body>
+    <%- include("./partials/footer.ejs") %>
+
+</html>

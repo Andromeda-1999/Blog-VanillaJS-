@@ -1,0 +1,49 @@
+<html lang="en">
+<!-- to import a partial tag in ejs 
+use include function relative path to the partial template the function will use
+one we use = sign it escapes special characters and we output the value string
+incase we want to output raw html  we use - sign-->
+<%- include("./partials/header.ejs") %>
+
+    <!-- PASSING DATA INTO view
+create dynamic content inside the template -->
+
+    <body>
+        <!-- these are ejs tags much like php tag dynamic code -->
+        <!-- <% const name='mario' %> -->
+        <%- include("./partials/nav.ejs") %>
+            <div class="content">
+                <!-- adding dynamic data -->
+                <h2>All Blogs</h2>
+                <!-- use vanilla javascript used for queries in ejs tags to check if their is data in array object coming fromm app js  -->
+                <% if (blogs.length> 0) { %>
+                    <!-- not closing bracket up and closing the ejs tag instead because we need to add template below 
+                 cycle through each array object having property snippet and title  -->
+                    <% blogs.forEach(blogs=> { %>
+                        <!-- suround the title and snippet with links so they go to/blogs and
+                            / the id of that particular blog
+                        we already have _id property of all blogs due to mongo db  -->
+                        <!-- blog id is the dynamic variable which we are displaying using ejs syntax anchor tag -->
+                        <a class="single" href="/blogs/<%= blogs._id %>">
+                            <h3 class="title">
+                                <!-- same method of outputting variable -->
+                                <%= blogs.title %>
+                            </h3>
+                            <p class="snippet">
+                                <%= blogs.snippet %>
+                            </p>
+                        </a>
+                        <% }) %>
+                            <!-- if array of object is empty  -->
+                            <% } else { %>
+                                <p>
+                                    No Content to display
+                                </p>
+                                <% } %>
+
+
+            </div>
+    </body>
+    <%- include("./partials/footer.ejs") %>
+
+</html>
